@@ -1,4 +1,4 @@
-package ksh;
+package ksh.emall;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

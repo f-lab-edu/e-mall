@@ -1,7 +1,7 @@
 package ksh.emall.product.entity;
 
 import jakarta.persistence.*;
-import ksh.BaseEntity;
+import ksh.emall.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
