@@ -31,10 +31,16 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
         boolean isAscending
     ) {
         List<ProductWithReviewStat> content = queryFactory
-            .select(Projections.constructor(ProductWithReviewStat.class, product, productReviewStat))
+            .select(Projections.constructor(
+                ProductWithReviewStat.class,
+                product,
+                productReviewStat
+            ))
             .from(product)
             .join(productReviewStat)
-            .on(productReviewStat.productId.eq(product.id))
+                .on(productReviewStat.productId.eq(product.id))
+            .join(productSalesStat)
+                .on(productSalesStat.productId.eq(product.id))
             .where(product.category.eq(category))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
