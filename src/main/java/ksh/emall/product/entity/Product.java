@@ -14,6 +14,8 @@ import org.hibernate.annotations.Where;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@SQLDelete(sql = "update order set is_deleted = true where id = ?")
+@Where(clause = "isDeleted = 0")
 public class Product extends BaseEntity {
 
     @Id
@@ -35,7 +37,5 @@ public class Product extends BaseEntity {
 
     private String imageUrl;
 
-    @SQLDelete(sql = "update order set is_deleted = true where id = ?")
-    @Where(clause = "isDeleted = 0")
     private boolean isDeleted;
 }
