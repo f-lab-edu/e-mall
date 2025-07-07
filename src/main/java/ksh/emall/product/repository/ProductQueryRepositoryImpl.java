@@ -50,6 +50,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
 
         Long count = queryFactory.select(product.count())
             .from(product)
+            .where(product.category.eq(category))
             .fetchOne();
 
         return new PageImpl<>(content, pageable, count);
@@ -94,6 +95,10 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
 
         Long count = queryFactory.select(product.count())
             .from(product)
+            .where(
+                product.category.eq(category),
+                createSearchPredicate(searchCondition)
+            )
             .fetchOne();
 
         return new PageImpl<>(content, pageable, count);
