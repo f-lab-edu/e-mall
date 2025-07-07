@@ -38,10 +38,8 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
                 productReviewStat
             ))
             .from(product)
-            .join(productReviewStat)
-            .on(productReviewStat.productId.eq(product.id))
-            .join(productSalesStat)
-            .on(productSalesStat.productId.eq(product.id))
+            .join(productReviewStat).on(productReviewStat.productId.eq(product.id))
+            .join(productSalesStat).on(productSalesStat.productId.eq(product.id))
             .where(product.category.eq(category))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
