@@ -159,7 +159,9 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
         }
 
         if (minPrice == null) {
-            return product.price.loe(maxPrice);
+            return product.price
+                .gt(0)
+                .and(product.price.loe(maxPrice));
         }
 
         if (maxPrice == null) {
