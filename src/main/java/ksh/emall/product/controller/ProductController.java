@@ -26,10 +26,8 @@ public class ProductController {
         Pageable pageable,
         @Valid ProductRequestDto productRequest
     ) {
-        Page<ProductResponseDto> page = productService.findProductsByCategory(
-                pageable,
-                productRequest
-            )
+        Page<ProductResponseDto> page = productService
+            .findProductsByCategory(pageable, productRequest)
             .map(ProductResponseDto::from);
 
         PageResponseDto<ProductResponseDto> pageResponse = PageResponseDto.from(page);
