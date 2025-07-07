@@ -1,6 +1,7 @@
 package ksh.emall.product.service;
 
 import ksh.emall.product.dto.request.ProductRequestDto;
+import ksh.emall.product.dto.request.ProductSearchConditionRequestDto;
 import ksh.emall.product.entity.ProductCategory;
 import ksh.emall.product.repository.ProductRepository;
 import ksh.emall.product.repository.projection.ProductWithReviewStat;
@@ -34,5 +35,18 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<String> findAllBrandsOfCategory(ProductCategory category) {
         return productRepository.findBrandDistinctByCategory(category);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductWithReviewStat> searchProducts(
+        Pageable pageable,
+        ProductRequestDto productRequest,
+        ProductSearchConditionRequestDto productSearchRequestDto
+    ) {
+        return productRepository.findBySearchCondition(
+            pageable,
+            productRequest,
+            productSearchRequestDto
+        );
     }
 }
