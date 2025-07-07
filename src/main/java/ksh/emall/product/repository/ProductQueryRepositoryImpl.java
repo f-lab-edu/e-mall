@@ -4,7 +4,7 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import ksh.emall.product.entity.*;
+import ksh.emall.product.entity.ProductCategory;
 import ksh.emall.product.enums.sort.ProductSortCriteria;
 import ksh.emall.product.repository.projection.ProductWithReviewStat;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +14,9 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-import static ksh.emall.product.entity.QProduct.*;
-import static ksh.emall.product.entity.QProductReviewStat.*;
-import static ksh.emall.product.entity.QProductSalesStat.*;
+import static ksh.emall.product.entity.QProduct.product;
+import static ksh.emall.product.entity.QProductReviewStat.productReviewStat;
+import static ksh.emall.product.entity.QProductSalesStat.productSalesStat;
 
 @RequiredArgsConstructor
 public class ProductQueryRepositoryImpl implements ProductQueryRepository {
@@ -52,6 +52,15 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
             .fetchOne();
 
         return new PageImpl<>(content, pageable, count);
+    }
+
+    @Override
+    public List<String> findBrandDistinctByCategory(ProductCategory category) {
+        return queryFactory
+            .select(product.brand).distinct()
+            .from(product)
+            .where(product.category.eq(category))
+            .fetch();
     }
 
     OrderSpecifier buildProductOrderSpecifier(ProductSortCriteria criteria, boolean isAscending) {
