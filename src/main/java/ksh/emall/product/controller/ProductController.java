@@ -3,6 +3,7 @@ package ksh.emall.product.controller;
 import jakarta.validation.Valid;
 import ksh.emall.common.dto.response.PageResponseDto;
 import ksh.emall.product.dto.request.ProductRequestDto;
+import ksh.emall.product.dto.request.ProductSearchConditionRequestDto;
 import ksh.emall.product.dto.response.ProductResponseDto;
 import ksh.emall.product.dto.response.ProductSearchResponseDto;
 import ksh.emall.product.service.ProductService;
@@ -35,6 +36,24 @@ public class ProductController {
         List<String> brands = productService.findAllBrandsOfCategory(productRequest.getCategory());
 
         ProductSearchResponseDto response = ProductSearchResponseDto.of(pageResponse, brands);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/products/search")
+    public ResponseEntity<PageResponseDto> searchProductsWithConditions(
+        Pageable pageable,
+        @Valid ProductRequestDto productRequest,
+        @Valid ProductSearchConditionRequestDto productSearchRequestDto
+    ){
+        Page<ProductResponseDto> page = productService.searchProducts(
+                pageable,
+                productRequest,
+                productSearchRequestDto
+            )
+            .map(ProductResponseDto::from);
+
+        PageResponseDto<ProductResponseDto> response = PageResponseDto.from(page);
 
         return ResponseEntity.ok(response);
     }
