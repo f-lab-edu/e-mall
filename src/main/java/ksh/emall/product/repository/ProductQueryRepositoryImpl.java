@@ -1,9 +1,10 @@
 package ksh.emall.product.repository;
 
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import ksh.emall.product.dto.request.ProductRequestDto;
+import ksh.emall.product.dto.request.ProductSearchConditionRequestDto;
 import ksh.emall.product.entity.ProductCategory;
 import ksh.emall.product.enums.sort.ProductSortCriteria;
 import ksh.emall.product.repository.projection.ProductWithReviewStat;
@@ -63,7 +64,42 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
             .fetch();
     }
 
-    OrderSpecifier buildProductOrderSpecifier(ProductSortCriteria criteria, boolean isAscending) {
+    @Override
+    public Page<ProductWithReviewStat> findBySearchCondition(
+        Pageable pageable,
+        ProductRequestDto productRequest,
+        ProductSearchConditionRequestDto searchCondition
+    ) {
+        ProductCategory category = productRequest.getCategory();
+        ProductSortCriteria criteria = productRequest.getCriteria();
+        Boolean isAscending = productRequest.getIsAscending();
+
+        List<ProductWithReviewStat> content = queryFactory
+            .select(Projections.constructor(
+                ProductWithReviewStat.class,
+                product,
+                productReviewStat
+            ))
+            .from(product)
+            .join(productReviewStat).on(productReviewStat.productId.eq(product.id))
+            .join(productSalesStat).on(productSalesStat.productId.eq(product.id))
+            .where(
+                product.category.eq(category),
+                createSearchPredicate(searchCondition)
+            )
+            .orderBy(buildProductOrderSpecifier(criteria, isAscending))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        Long count = queryFactory.select(product.count())
+            .from(product)
+            .fetchOne();
+
+        return new PageImpl<>(content, pageable, count);
+    }
+
+    private OrderSpecifier buildProductOrderSpecifier(ProductSortCriteria criteria, boolean isAscending) {
         Order direction = isAscending ? Order.ASC : Order.DESC;
 
         if(criteria == ProductSortCriteria.PRICE) {
@@ -75,5 +111,56 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
         }
 
         return new OrderSpecifier(direction, product.createdAt);
+    }
+
+    private Predicate createSearchPredicate(ProductSearchConditionRequestDto condition) {
+        return ExpressionUtils.allOf(
+            keywordPredicate(condition.getSearchKeyword()),
+            brandsPredicate(condition.getBrands()),
+            reviewScorePredicate(condition.getReviewScore()),
+            priceRangePredicate(condition.getMinPrice(), condition.getMaxPrice())
+        );
+    }
+
+    private BooleanExpression keywordPredicate(String keyword) {
+        return product.name.containsIgnoreCase(keyword);
+    }
+
+    private BooleanExpression brandsPredicate(List<String> brands) {
+        return !brands.isEmpty()
+            ? product.brand.in(brands)
+            : null;
+    }
+
+    private BooleanExpression reviewScorePredicate(Integer score) {
+        if (score == null) {
+            return null;
+        }
+
+        if (score < 4) {
+            return productReviewStat.averageReviewScore
+                .goe(score)
+                .and(productReviewStat.averageReviewScore.lt(score + 1));
+        }
+
+        return productReviewStat.averageReviewScore
+            .goe(4)
+            .and(productReviewStat.averageReviewScore.loe(5));
+    }
+
+    private BooleanExpression priceRangePredicate(Integer minPrice, Integer maxPrice) {
+        if (minPrice == null && maxPrice == null) {
+            return null;
+        }
+
+        if (minPrice == null) {
+            return product.price.loe(maxPrice);
+        }
+
+        if (maxPrice == null) {
+            return product.price.goe(minPrice);
+        }
+
+        return product.price.between(minPrice, maxPrice);
     }
 }

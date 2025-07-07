@@ -1,5 +1,7 @@
 package ksh.emall.product.repository;
 
+import ksh.emall.product.dto.request.ProductRequestDto;
+import ksh.emall.product.dto.request.ProductSearchConditionRequestDto;
 import ksh.emall.product.entity.ProductCategory;
 import ksh.emall.product.enums.sort.ProductSortCriteria;
 import ksh.emall.product.repository.projection.ProductWithReviewStat;
@@ -13,4 +15,6 @@ public interface ProductQueryRepository {
     Page<ProductWithReviewStat> findByCategoryWithReviewStat(Pageable pageable, ProductCategory category, ProductSortCriteria criteria, boolean isAscending);
 
     List<String> findBrandDistinctByCategory(ProductCategory category);
+
+    Page<ProductWithReviewStat> findBySearchCondition(Pageable pageable, ProductRequestDto productRequest, ProductSearchConditionRequestDto searchCondition);
 }
