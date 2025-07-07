@@ -39,9 +39,9 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
             ))
             .from(product)
             .join(productReviewStat)
-                .on(productReviewStat.productId.eq(product.id))
+            .on(productReviewStat.productId.eq(product.id))
             .join(productSalesStat)
-                .on(productSalesStat.productId.eq(product.id))
+            .on(productSalesStat.productId.eq(product.id))
             .where(product.category.eq(category))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
@@ -107,11 +107,11 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
     private OrderSpecifier productOrderSpecifier(ProductSortCriteria criteria, boolean isAscending) {
         Order direction = isAscending ? Order.ASC : Order.DESC;
 
-        if(criteria == ProductSortCriteria.PRICE) {
+        if (criteria == ProductSortCriteria.PRICE) {
             return new OrderSpecifier(direction, product.price);
         }
 
-        if(criteria == ProductSortCriteria.SOLD_COUNT) {
+        if (criteria == ProductSortCriteria.SOLD_COUNT) {
             return new OrderSpecifier(Order.DESC, productSalesStat.soldCount);
         }
 

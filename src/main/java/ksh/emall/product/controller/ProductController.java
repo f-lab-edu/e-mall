@@ -45,7 +45,7 @@ public class ProductController {
         Pageable pageable,
         @Valid ProductRequestDto productRequest,
         @Valid ProductSearchConditionRequestDto productSearchRequestDto
-    ){
+    ) {
         Page<ProductResponseDto> page = productService.searchProducts(
                 pageable,
                 productRequest,

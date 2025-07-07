@@ -17,6 +17,6 @@ public class ProductSearchResponseDto {
         PageResponseDto<ProductResponseDto> pageResponseDto,
         List<String> brands
     ) {
-        return new  ProductSearchResponseDto(pageResponseDto, brands);
+        return new ProductSearchResponseDto(pageResponseDto, brands);
     }
 }

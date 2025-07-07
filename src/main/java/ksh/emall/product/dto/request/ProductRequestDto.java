@@ -3,7 +3,6 @@ package ksh.emall.product.dto.request;
 import jakarta.validation.constraints.NotNull;
 import ksh.emall.product.entity.ProductCategory;
 import ksh.emall.product.enums.sort.ProductSortCriteria;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
