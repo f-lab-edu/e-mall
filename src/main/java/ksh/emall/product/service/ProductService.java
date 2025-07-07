@@ -22,7 +22,7 @@ public class ProductService {
             pageable,
             productRequest.getCategory(),
             productRequest.getCriteria(),
-            productRequest.isAscending()
+            productRequest.getIsAscending()
         );
     }
 }

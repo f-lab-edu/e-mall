@@ -18,10 +18,5 @@ public class ProductRequestDto {
     private ProductSortCriteria criteria;
 
     @NotNull(message = "정렬 방향은 필수입니다.")
-    @Getter(AccessLevel.NONE)
     private Boolean isAscending;
-
-    public Boolean isAscending() {
-        return this.isAscending;
-    }
 }
