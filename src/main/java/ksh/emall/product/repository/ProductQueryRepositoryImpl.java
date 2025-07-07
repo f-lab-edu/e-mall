@@ -45,7 +45,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
             .where(product.category.eq(category))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
-            .orderBy(buildProductOrderSpecifier(criteria, isAscending))
+            .orderBy(productOrderSpecifier(criteria, isAscending))
             .fetch();
 
         Long count = queryFactory.select(product.count())
@@ -86,9 +86,9 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
             .join(productSalesStat).on(productSalesStat.productId.eq(product.id))
             .where(
                 product.category.eq(category),
-                createSearchPredicate(searchCondition)
+                searchPredicate(searchCondition)
             )
-            .orderBy(buildProductOrderSpecifier(criteria, isAscending))
+            .orderBy(productOrderSpecifier(criteria, isAscending))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
@@ -97,14 +97,14 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
             .from(product)
             .where(
                 product.category.eq(category),
-                createSearchPredicate(searchCondition)
+                searchPredicate(searchCondition)
             )
             .fetchOne();
 
         return new PageImpl<>(content, pageable, count);
     }
 
-    private OrderSpecifier buildProductOrderSpecifier(ProductSortCriteria criteria, boolean isAscending) {
+    private OrderSpecifier productOrderSpecifier(ProductSortCriteria criteria, boolean isAscending) {
         Order direction = isAscending ? Order.ASC : Order.DESC;
 
         if(criteria == ProductSortCriteria.PRICE) {
@@ -118,7 +118,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
         return new OrderSpecifier(direction, product.createdAt);
     }
 
-    private Predicate createSearchPredicate(ProductSearchConditionRequestDto condition) {
+    private Predicate searchPredicate(ProductSearchConditionRequestDto condition) {
         return ExpressionUtils.allOf(
             keywordPredicate(condition.getSearchKeyword()),
             brandsPredicate(condition.getBrands()),
