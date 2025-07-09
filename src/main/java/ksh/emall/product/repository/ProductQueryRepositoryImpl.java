@@ -85,7 +85,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
             .join(productReviewStat).on(productReviewStat.productId.eq(product.id))
             .join(productSalesStat).on(productSalesStat.productId.eq(product.id))
             .where(where)
-            .orderBy(productOrderSpecifier(criteria, isAscending))
+            .orderBy(orderSpecifier(criteria, isAscending))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
@@ -99,7 +99,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
             .fetchOne();
     }
 
-    private OrderSpecifier productOrderSpecifier(ProductSortCriteria criteria, boolean isAscending) {
+    private OrderSpecifier orderSpecifier(ProductSortCriteria criteria, boolean isAscending) {
         Order direction = isAscending ? Order.ASC : Order.DESC;
 
         if (criteria == ProductSortCriteria.PRICE) {
