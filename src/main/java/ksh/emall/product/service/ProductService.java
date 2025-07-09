@@ -33,11 +33,6 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<String> findAllBrandsOfCategory(ProductCategory category) {
-        return productRepository.findBrandDistinctByCategory(category);
-    }
-
-    @Transactional(readOnly = true)
     public Page<ProductWithReviewStat> searchProducts(
         Pageable pageable,
         ProductRequestDto productRequest,

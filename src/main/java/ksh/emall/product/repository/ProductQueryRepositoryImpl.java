@@ -39,15 +39,6 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
     }
 
     @Override
-    public List<String> findBrandDistinctByCategory(ProductCategory category) {
-        return queryFactory
-            .select(product.brand).distinct()
-            .from(product)
-            .where(product.category.eq(category))
-            .fetch();
-    }
-
-    @Override
     public Page<ProductWithReviewStat> findBySearchCondition(
         Pageable pageable,
         ProductRequestDto productRequest,

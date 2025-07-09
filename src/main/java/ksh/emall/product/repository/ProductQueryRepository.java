@@ -14,7 +14,5 @@ public interface ProductQueryRepository {
 
     Page<ProductWithReviewStat> findByCategoryWithReviewStat(Pageable pageable, ProductCategory category, ProductSortCriteria criteria, boolean isAscending);
 
-    List<String> findBrandDistinctByCategory(ProductCategory category);
-
     Page<ProductWithReviewStat> findBySearchCondition(Pageable pageable, ProductRequestDto productRequest, ProductSearchConditionRequestDto searchCondition);
 }
