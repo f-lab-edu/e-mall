@@ -2,6 +2,7 @@ package ksh.emall.product.repository;
 
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import ksh.emall.product.dto.request.ProductRequestDto;
 import ksh.emall.product.dto.request.ProductSearchConditionRequestDto;
@@ -136,36 +137,29 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
     }
 
     private BooleanExpression reviewScorePredicate(Integer score) {
-        if (score == null) {
-            return null;
-        }
+        if (score == null) return null;
 
-        if (score < 4) {
-            return productReviewStat.averageReviewScore
-                .goe(score)
-                .and(productReviewStat.averageReviewScore.lt(score + 1));
-        }
+        var avgScore = productReviewStat.averageReviewScore;
 
-        return productReviewStat.averageReviewScore
-            .goe(4)
-            .and(productReviewStat.averageReviewScore.loe(5));
+        var lower = avgScore.goe(score);
+        var upper = score < 4 ? avgScore.lt(score + 1) : avgScore.loe(score + 1);
+
+        return lower.and(upper);
     }
 
     private BooleanExpression priceRangePredicate(Integer minPrice, Integer maxPrice) {
-        if (minPrice == null && maxPrice == null) {
-            return null;
+        var price = product.price;
+        BooleanExpression predicate = null;
+
+        if(minPrice != null) {
+            predicate = price.goe(minPrice);
         }
 
-        if (minPrice == null) {
-            return product.price
-                .gt(0)
-                .and(product.price.loe(maxPrice));
+        if(maxPrice != null) {
+            var upper = price.loe(maxPrice);
+            predicate = (predicate == null) ? upper : predicate.and(upper);
         }
 
-        if (maxPrice == null) {
-            return product.price.goe(minPrice);
-        }
-
-        return product.price.between(minPrice, maxPrice);
+        return predicate;
     }
 }
