@@ -2,7 +2,6 @@ package ksh.emall.product.repository;
 
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import ksh.emall.product.dto.request.ProductRequestDto;
 import ksh.emall.product.dto.request.ProductSearchConditionRequestDto;
@@ -32,25 +31,9 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
         ProductSortCriteria criteria,
         boolean isAscending
     ) {
-        List<ProductWithReviewStat> content = queryFactory
-            .select(Projections.constructor(
-                ProductWithReviewStat.class,
-                product,
-                productReviewStat
-            ))
-            .from(product)
-            .join(productReviewStat).on(productReviewStat.productId.eq(product.id))
-            .join(productSalesStat).on(productSalesStat.productId.eq(product.id))
-            .where(product.category.eq(category))
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
-            .orderBy(productOrderSpecifier(criteria, isAscending))
-            .fetch();
-
-        Long count = queryFactory.select(product.count())
-            .from(product)
-            .where(product.category.eq(category))
-            .fetchOne();
+        Predicate where = product.category.eq(category);
+        List content = getContent(pageable, where, criteria, isAscending);
+        Long count = getCount(where);
 
         return new PageImpl<>(content, pageable, count);
     }
@@ -70,11 +53,29 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
         ProductRequestDto productRequest,
         ProductSearchConditionRequestDto searchCondition
     ) {
-        ProductCategory category = productRequest.getCategory();
-        ProductSortCriteria criteria = productRequest.getCriteria();
-        Boolean isAscending = productRequest.getIsAscending();
+        Predicate where = ExpressionUtils.allOf(
+            product.category.eq(productRequest.getCategory()),
+            searchPredicate(searchCondition)
+        );
 
-        List<ProductWithReviewStat> content = queryFactory
+        List<ProductWithReviewStat> content = getContent(
+            pageable,
+            where,
+            productRequest.getCriteria(),
+            productRequest.getIsAscending()
+        );
+        Long count = getCount(where);
+
+        return new PageImpl<>(content, pageable, count);
+    }
+
+    private List getContent(
+        Pageable pageable,
+        Predicate where,
+        ProductSortCriteria criteria,
+        Boolean isAscending
+    ) {
+        return queryFactory
             .select(Projections.constructor(
                 ProductWithReviewStat.class,
                 product,
@@ -83,24 +84,19 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
             .from(product)
             .join(productReviewStat).on(productReviewStat.productId.eq(product.id))
             .join(productSalesStat).on(productSalesStat.productId.eq(product.id))
-            .where(
-                product.category.eq(category),
-                searchPredicate(searchCondition)
-            )
+            .where(where)
             .orderBy(productOrderSpecifier(criteria, isAscending))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
+    }
 
-        Long count = queryFactory.select(product.count())
+    private Long getCount(Predicate where) {
+        return queryFactory
+            .select(product.count())
             .from(product)
-            .where(
-                product.category.eq(category),
-                searchPredicate(searchCondition)
-            )
+            .where(where)
             .fetchOne();
-
-        return new PageImpl<>(content, pageable, count);
     }
 
     private OrderSpecifier productOrderSpecifier(ProductSortCriteria criteria, boolean isAscending) {
@@ -151,11 +147,11 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
         var price = product.price;
         BooleanExpression predicate = null;
 
-        if(minPrice != null) {
+        if (minPrice != null) {
             predicate = price.goe(minPrice);
         }
 
-        if(maxPrice != null) {
+        if (maxPrice != null) {
             var upper = price.loe(maxPrice);
             predicate = (predicate == null) ? upper : predicate.and(upper);
         }
