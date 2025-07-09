@@ -3,6 +3,7 @@ package ksh.emall.product.controller;
 import jakarta.validation.Valid;
 import ksh.emall.common.dto.response.PageResponseDto;
 import ksh.emall.product.dto.request.ProductRequestDto;
+import ksh.emall.product.dto.request.ProductSearchConditionRequestDto;
 import ksh.emall.product.dto.response.ProductResponseDto;
 import ksh.emall.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,25 @@ public class ProductController {
         Pageable pageable,
         @Valid ProductRequestDto productRequest
     ) {
-        Page<ProductResponseDto> page = productService.findProductsByCategory(
+        Page<ProductResponseDto> page = productService
+            .findProductsByCategory(pageable, productRequest)
+            .map(ProductResponseDto::from);
+
+        PageResponseDto<ProductResponseDto> response = PageResponseDto.from(page);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/products/search")
+    public ResponseEntity<PageResponseDto> searchProductsWithConditions(
+        Pageable pageable,
+        @Valid ProductRequestDto productRequest,
+        @Valid ProductSearchConditionRequestDto productSearchRequestDto
+    ) {
+        Page<ProductResponseDto> page = productService.searchProducts(
                 pageable,
-                productRequest
+                productRequest,
+                productSearchRequestDto
             )
             .map(ProductResponseDto::from);
 
