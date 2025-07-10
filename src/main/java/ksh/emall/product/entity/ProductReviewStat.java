@@ -32,4 +32,15 @@ public class ProductReviewStat extends BaseEntity {
     private Long productId;
 
     private boolean isDeleted;
+
+    public void addReviewScore(int newScore) {
+        if(reviewCount == 0){
+            this.reviewCount = 0;
+            this.averageReviewScore = 0.0;
+        }
+
+        double totalScore = this.averageReviewScore * this.reviewCount;
+        this.reviewCount++;
+        this.averageReviewScore = (totalScore + newScore) / this.reviewCount;
+    }
 }
