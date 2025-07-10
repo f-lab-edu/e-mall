@@ -7,6 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
 
+    PRODUCT_NOT_FOUND(404, "product.not.found"),
+
     INTERNAL_SERVER_ERROR(500, "internal.server.error");
 
     private final int status;
