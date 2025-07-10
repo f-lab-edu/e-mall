@@ -24,7 +24,7 @@ public class ReviewService {
         productRepository.getById(productId);
         Review review = createReview(productId, request);
         reviewRepository.save(review);
-        ProductReviewStat productReviewStat = productReviewStatRepository.getById(productId);
+        ProductReviewStat productReviewStat = productReviewStatRepository.getByProductId(productId);
         productReviewStat.addReviewScore(request.getScore());
     }
 
