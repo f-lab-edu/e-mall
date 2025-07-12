@@ -17,6 +17,8 @@ import org.hibernate.annotations.Where;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@SQLDelete(sql = "update order set is_deleted = true where id = ?")
+@Where(clause = "isDeleted = 0")
 public class ProductReviewStat extends BaseEntity {
 
     @Id
@@ -29,7 +31,16 @@ public class ProductReviewStat extends BaseEntity {
 
     private Long productId;
 
-    @SQLDelete(sql = "update order set is_deleted = true where id = ?")
-    @Where(clause = "isDeleted = 0")
     private boolean isDeleted;
+
+    public void addReviewScore(int newScore) {
+        if(reviewCount == 0){
+            this.reviewCount = 0;
+            this.averageReviewScore = 0.0;
+        }
+
+        double totalScore = this.averageReviewScore * this.reviewCount;
+        this.reviewCount++;
+        this.averageReviewScore = (totalScore + newScore) / this.reviewCount;
+    }
 }
