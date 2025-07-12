@@ -14,6 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
@@ -21,6 +24,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
     private final ProductReviewStatRepository productReviewStatRepository;
+    private final Clock clock;
 
     @Transactional(readOnly = true)
     public Page<ReviewWithMember> findReviewsOfProduct(
@@ -44,11 +48,15 @@ public class ReviewService {
         productReviewStat.addReviewScore(request.getScore());
     }
 
-    private static Review createReview(long productId, ReviewRegisterRequestDto request) {
+    private Review createReview(
+        long productId,
+        ReviewRegisterRequestDto request
+    ) {
         return Review.builder()
             .score(request.getScore())
             .title(request.getTitle())
             .body(request.getBody())
+            .registerDate(LocalDate.now(clock))
             .memberId(request.getMemberId())
             .productId(productId)
             .build();

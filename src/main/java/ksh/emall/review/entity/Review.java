@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Builder
@@ -30,6 +32,8 @@ public class Review extends BaseEntity {
     private String body;
 
     private Integer likeCount;
+
+    private LocalDate registerDate;
 
     private String imageUrl;
 
