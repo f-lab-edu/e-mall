@@ -1,6 +1,9 @@
-package ksh.emall.review.entity;
+package ksh.emall.member.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import ksh.emall.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +12,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.time.LocalDate;
-
 @Entity
 @Getter
 @Builder
@@ -18,28 +19,17 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @SQLDelete(sql = "update order set is_deleted = true where id = ?")
 @Where(clause = "isDeleted = 0")
-public class Review extends BaseEntity {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer score;
+    private String email;
 
-    private String title;
+    private String password;
 
-    @Column(length = 1500)
-    private String body;
+    private String name;
 
-    private Integer likeCount;
-
-    private LocalDate registerDate;
-
-    private String imageUrl;
-
-    private Long memberId;
-
-    private Long productId;
-
-    private boolean isDeleted;
+    private String nickname;
 }
