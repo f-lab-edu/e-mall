@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Range;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor
@@ -28,12 +28,12 @@ public class ReviewRequestDto {
     @Range(min = 0, max = 5, message = "이전 페이지의 마지막 리뷰 점수는 0이상 5이하입니다.")
     private Integer lastScore;
 
-    private LocalDateTime lastRegisterTime;
+    private LocalDate lastRegisterDate;
 
-    @AssertTrue(message = "이전 페이지 마지막 리뷰의 점수와 등록 시각 중 하나만 입력해야 합니다.")
+    @AssertTrue(message = "이전 페이지 마지막 리뷰의 점수와 등록일 중 하나만 입력해야 합니다.")
     private boolean hasOnlyOne() {
         boolean hasScore = this.lastScore != null;
-        boolean hasRegisterDate = this.lastRegisterTime != null;
+        boolean hasRegisterDate = this.lastRegisterDate != null;
 
         return hasScore ^ hasRegisterDate;
     }

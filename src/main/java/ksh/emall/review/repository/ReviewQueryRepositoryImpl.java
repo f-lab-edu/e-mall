@@ -5,7 +5,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import ksh.emall.review.dto.request.ReviewRequestDto;
@@ -15,7 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import static ksh.emall.member.entity.QMember.member;
@@ -76,9 +76,9 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository {
             );
         }
 
-        return registerAtCursorPredicate(
-            review.createdAt,
-            request.getLastRegisterTime(),
+        return registerDateCursorPredicate(
+            review.registerDate,
+            request.getLastRegisterDate(),
             request.getLastId(),
             request.getIsAscending()
         );
@@ -100,9 +100,9 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository {
         return sameValuePredicate.or(nextPagePredicate);
     }
 
-    private BooleanExpression registerAtCursorPredicate(
-        DateTimePath<LocalDateTime> path,
-        LocalDateTime lastValue,
+    private BooleanExpression registerDateCursorPredicate(
+        DatePath<LocalDate> path,
+        LocalDate lastValue,
         long lastId,
         boolean isAscending
     ) {
