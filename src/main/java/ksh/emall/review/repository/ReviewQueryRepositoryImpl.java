@@ -9,7 +9,7 @@ import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import ksh.emall.review.dto.request.ReviewRequestDto;
-import ksh.emall.review.repository.production.ReviewWithMember;
+import ksh.emall.review.repository.projection.ReviewWithMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

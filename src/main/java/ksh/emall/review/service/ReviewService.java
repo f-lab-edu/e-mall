@@ -7,7 +7,7 @@ import ksh.emall.review.dto.request.ReviewRegisterRequestDto;
 import ksh.emall.review.dto.request.ReviewRequestDto;
 import ksh.emall.review.entity.Review;
 import ksh.emall.review.repository.ReviewRepository;
-import ksh.emall.review.repository.production.ReviewWithMember;
+import ksh.emall.review.repository.projection.ReviewWithMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

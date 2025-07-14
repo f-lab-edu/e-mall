@@ -2,7 +2,7 @@ package ksh.emall.review.dto.response;
 
 import ksh.emall.member.entity.Member;
 import ksh.emall.review.entity.Review;
-import ksh.emall.review.repository.production.ReviewWithMember;
+import ksh.emall.review.repository.projection.ReviewWithMember;
 import lombok.Builder;
 import lombok.Getter;
 

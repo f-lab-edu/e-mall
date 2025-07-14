@@ -1,7 +1,7 @@
 package ksh.emall.review.repository;
 
 import ksh.emall.review.dto.request.ReviewRequestDto;
-import ksh.emall.review.repository.production.ReviewWithMember;
+import ksh.emall.review.repository.projection.ReviewWithMember;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

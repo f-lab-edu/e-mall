@@ -1,4 +1,4 @@
-package ksh.emall.review.repository.production;
+package ksh.emall.review.repository.projection;
 
 import ksh.emall.member.entity.Member;
 import ksh.emall.review.entity.Review;
