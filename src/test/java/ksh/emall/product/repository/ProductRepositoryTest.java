@@ -168,6 +168,121 @@ class ProductRepositoryTest {
         assertThat(page.hasNext()).isTrue();
     }
 
+    @DisplayName("특정 카테고리의 제품을 브랜드 필터와 함께 제품명으로 검색할 수 있다.")
+    @Test
+    void findBySearchCondition1() {
+        //given
+        PageRequest pageRequest = PageRequest.of(0, 3);
+
+        var productRequest = new ProductRequestDto(
+            ProductCategory.FOOD,
+            ProductSortCriteria.REGISTER_DATE,
+            false
+        );
+
+        var searchRequest = new ProductSearchConditionRequestDto(
+            "치킨",
+            List.of("치킨집", "피자집"),
+            null,
+            null,
+            null
+        );
+
+        //when
+        var page = productRepository.findBySearchCondition(
+            pageRequest,
+            productRequest,
+            searchRequest
+        );
+
+        //then
+        assertThat(page.getContent()).hasSize(3)
+            .extracting("product.name", "reviewStat.averageReviewScore")
+            .containsExactly(
+                tuple("양념 치킨", 3.9),
+                tuple("후라이드 치킨", 4.0),
+                tuple("핫치킨 피자", 5.0)
+            );
+
+        assertThat(page.hasNext()).isFalse();
+    }
+
+    @DisplayName("특정 카테고리의 제품을 리뷰 평균 점수대 필터와 함께 제품명으로 검색할 수 있다.")
+    @Test
+    void findBySearchCondition2() {
+        //given
+        PageRequest pageRequest = PageRequest.of(0, 3);
+
+        var productRequest = new ProductRequestDto(
+            ProductCategory.FOOD,
+            ProductSortCriteria.REGISTER_DATE,
+            false
+        );
+
+        var searchRequest = new ProductSearchConditionRequestDto(
+            "치킨",
+            null,
+            4,
+            null,
+            null
+        );
+
+        //when
+        var page = productRepository.findBySearchCondition(
+            pageRequest,
+            productRequest,
+            searchRequest
+        );
+
+        //then
+        assertThat(page.getContent()).hasSize(2)
+            .extracting("product.name", "reviewStat.averageReviewScore")
+            .containsExactly(
+                tuple("후라이드 치킨", 4.0),
+                tuple("핫치킨 피자", 5.0)
+            );
+
+        assertThat(page.hasNext()).isFalse();
+    }
+
+    @DisplayName("특정 카테고리의 제품을 가격 범위 필터와 함께 제품명으로 검색할 수 있다.")
+    @Test
+    void findBySearchCondition3() {
+        //given
+        PageRequest pageRequest = PageRequest.of(0, 3);
+
+        var productRequest = new ProductRequestDto(
+            ProductCategory.FOOD,
+            ProductSortCriteria.PRICE,
+            true
+        );
+
+        var searchRequest = new ProductSearchConditionRequestDto(
+            "치킨",
+            null,
+            null,
+            500,
+            2999
+        );
+
+        //when
+        var page = productRepository.findBySearchCondition(
+            pageRequest,
+            productRequest,
+            searchRequest
+        );
+
+        //then
+        assertThat(page.getContent()).hasSize(2)
+            .extracting("product.name", "reviewStat.averageReviewScore")
+            .containsExactly(
+                tuple("양념 치킨", 3.9),
+                tuple("핫치킨 피자", 5.0)
+            );
+
+        assertThat(page.hasNext()).isFalse();
+    }
+
     private Product createProduct(
         ProductCategory category,
         String name,
