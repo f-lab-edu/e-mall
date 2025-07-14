@@ -17,8 +17,8 @@ import org.hibernate.annotations.Where;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@SQLDelete(sql = "update order set is_deleted = true where id = ?")
-@Where(clause = "isDeleted = 0")
+@SQLDelete(sql = "update product_review_stat set is_deleted = true where id = ?")
+@Where(clause = "is_deleted = false")
 public class ProductReviewStat extends BaseEntity {
 
     @Id
