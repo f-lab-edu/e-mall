@@ -118,7 +118,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
     }
 
     private BooleanExpression brandsPredicate(List<String> brands) {
-        return !brands.isEmpty()
+        return brands != null && !brands.isEmpty()
             ? product.brand.in(brands)
             : null;
     }
