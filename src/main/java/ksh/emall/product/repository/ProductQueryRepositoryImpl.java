@@ -86,6 +86,8 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
         return queryFactory
             .select(product.count())
             .from(product)
+            .join(productReviewStat).on(productReviewStat.productId.eq(product.id))
+            .join(productSalesStat).on(productSalesStat.productId.eq(product.id))
             .where(where)
             .fetchOne();
     }
