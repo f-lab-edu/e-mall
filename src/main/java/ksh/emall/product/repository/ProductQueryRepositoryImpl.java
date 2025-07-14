@@ -76,7 +76,10 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
             .join(productReviewStat).on(productReviewStat.productId.eq(product.id))
             .join(productSalesStat).on(productSalesStat.productId.eq(product.id))
             .where(where)
-            .orderBy(orderSpecifier(criteria, isAscending))
+            .orderBy(
+                orderSpecifier(criteria, isAscending),
+                product.id.asc()
+            )
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
