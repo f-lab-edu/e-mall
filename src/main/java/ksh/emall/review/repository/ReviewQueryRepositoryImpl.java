@@ -24,7 +24,7 @@ import static ksh.emall.review.entity.QReview.review;
 @RequiredArgsConstructor
 public class ReviewQueryRepositoryImpl implements ReviewQueryRepository {
 
-    private JPAQueryFactory queryFactory;
+    private final JPAQueryFactory queryFactory;
 
 
     @Override
