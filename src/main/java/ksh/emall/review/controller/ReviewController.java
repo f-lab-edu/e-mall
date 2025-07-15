@@ -18,7 +18,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @GetMapping("/products/{productId}")
+    @GetMapping("/products/{productId}/reviews")
     public ResponseEntity<PageResponseDto> findReviewsOfProduct(
         @Valid PageRequestDto pageRequest,
         @PathVariable("productId") long productId,
