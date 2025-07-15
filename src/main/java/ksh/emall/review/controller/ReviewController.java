@@ -22,7 +22,7 @@ public class ReviewController {
     public ResponseEntity<PageResponseDto> findReviewsOfProduct(
         @Valid PageRequestDto pageRequest,
         @PathVariable("productId") long productId,
-        ReviewRequestDto request
+        @Valid ReviewRequestDto request
     ) {
         Page<ReviewResponseDto> page = reviewService.findReviewsOfProduct(
             pageRequest.toPageable(), productId, request)
