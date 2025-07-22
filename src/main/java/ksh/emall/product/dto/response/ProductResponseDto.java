@@ -30,7 +30,7 @@ public class ProductResponseDto {
             .price(product.getPrice())
             .deliveryType(product.getDeliveryType())
             .guaranteedDeliveryDate(LocalDate.now().plusDays(product.getExpectedDeliveryDays()))
-            .averageScore(reviewStat.getAverageReviewScore())
+            .averageScore(reviewStat.getAvgScore())
             .reviewCount(reviewStat.getReviewCount())
             .imageUrl(product.getImageUrl())
             .build();
