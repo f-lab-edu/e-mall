@@ -99,7 +99,7 @@ class ProductRepositoryTest {
 
         //then
         assertThat(page.getContent()).hasSize(3)
-            .extracting("product.name", "reviewStat.averageReviewScore")
+            .extracting("product.name", "reviewStat.avgScore")
             .containsExactly(
                 tuple("짜장면", 1.2),
                 tuple("후라이드 치킨", 4.0),
@@ -128,7 +128,7 @@ class ProductRepositoryTest {
 
         //then
         assertThat(page.getContent()).hasSize(4)
-            .extracting("product.name", "reviewStat.averageReviewScore")
+            .extracting("product.name", "reviewStat.avgScore")
             .containsExactly(
                 tuple("짬뽕", 5.0),
                 tuple("후라이드 치킨", 4.0),
@@ -158,7 +158,7 @@ class ProductRepositoryTest {
 
         //then
         assertThat(page.getContent()).hasSize(3)
-            .extracting("product.name", "reviewStat.averageReviewScore")
+            .extracting("product.name", "reviewStat.avgScore")
             .containsExactly(
                 tuple("짬뽕", 5.0),
                 tuple("짜장면", 1.2),
@@ -197,7 +197,7 @@ class ProductRepositoryTest {
 
         //then
         assertThat(page.getContent()).hasSize(3)
-            .extracting("product.name", "reviewStat.averageReviewScore")
+            .extracting("product.name", "reviewStat.avgScore")
             .containsExactly(
                 tuple("양념 치킨", 3.9),
                 tuple("후라이드 치킨", 4.0),
@@ -236,7 +236,7 @@ class ProductRepositoryTest {
 
         //then
         assertThat(page.getContent()).hasSize(2)
-            .extracting("product.name", "reviewStat.averageReviewScore")
+            .extracting("product.name", "reviewStat.avgScore")
             .containsExactly(
                 tuple("후라이드 치킨", 4.0),
                 tuple("핫치킨 피자", 5.0)
@@ -274,7 +274,7 @@ class ProductRepositoryTest {
 
         //then
         assertThat(page.getContent()).hasSize(2)
-            .extracting("product.name", "reviewStat.averageReviewScore")
+            .extracting("product.name", "reviewStat.avgScore")
             .containsExactly(
                 tuple("양념 치킨", 3.9),
                 tuple("핫치킨 피자", 5.0)
@@ -307,7 +307,7 @@ class ProductRepositoryTest {
         double avgScore
     ) {
         return ProductReviewStat.builder()
-            .averageReviewScore(avgScore)
+            .avgScore(avgScore)
             .reviewCount(10)
             .productId(productId)
             .build();
