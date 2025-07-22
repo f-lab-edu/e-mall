@@ -9,6 +9,7 @@ import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import ksh.emall.review.dto.request.ReviewRequestDto;
+import ksh.emall.review.enums.sort.ReviewSortCriteria;
 import ksh.emall.review.repository.projection.ReviewWithMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -124,9 +125,9 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository {
     ) {
         Order direction = request.getIsAscending() ? Order.ASC : Order.DESC;
 
-        return request.getLastScore() == null
-            ? new OrderSpecifier<>(direction, review.createdAt)
-            : new OrderSpecifier<>(direction, review.score);
+        return request.getCriteria() == ReviewSortCriteria.SCORE
+            ? new OrderSpecifier<>(direction, review.score)
+            : new OrderSpecifier<>(direction, review.registerDate);
     }
 
     private Long totalCount(Predicate where) {

@@ -2,6 +2,7 @@ package ksh.emall.review.dto.request;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
+import ksh.emall.review.enums.sort.ReviewSortCriteria;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Range;
@@ -11,6 +12,9 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 public class ReviewRequestDto {
+
+    @NotNull(message = "정렬 기준은 필수입니다.")
+    private ReviewSortCriteria criteria;
 
     @NotNull(message = "정렬 방향은 필수입니다.")
     private Boolean isAscending;
