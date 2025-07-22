@@ -40,12 +40,13 @@ public class ReviewService {
     }
 
     @Transactional
-    public void register(long productId, ReviewRegisterRequestDto request) {
+    public Review register(long productId, ReviewRegisterRequestDto request) {
         productRepository.getById(productId);
         Review review = createReview(productId, request);
         reviewRepository.save(review);
         ProductReviewStat productReviewStat = productReviewStatRepository.getByProductId(productId);
         productReviewStat.addReviewScore(request.getScore());
+        return review;
     }
 
     private Review createReview(
