@@ -51,6 +51,7 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository {
                 cursorOrder(request),
                 review.id.asc()
             )
+            .limit(pageable.getPageSize())
             .fetch();
 
 
