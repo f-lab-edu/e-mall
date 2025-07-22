@@ -104,9 +104,11 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository {
     private BooleanExpression registerDateCursorPredicate(
         DatePath<LocalDate> path,
         LocalDate lastValue,
-        long lastId,
+        Long lastId,
         boolean isAscending
     ) {
+        if(lastId == null) return null;
+
         BooleanExpression sameValuePredicate = path.eq(lastValue)
             .and(review.id.gt(lastId));
 
