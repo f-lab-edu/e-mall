@@ -17,8 +17,8 @@ import org.hibernate.annotations.Where;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@SQLDelete(sql = "update order set is_deleted = true where id = ?")
-@Where(clause = "isDeleted = 0")
+@SQLDelete(sql = "update member set is_deleted = true where id = ?")
+@Where(clause = "is_deleted = false")
 public class Member extends BaseEntity {
 
     @Id
@@ -32,4 +32,6 @@ public class Member extends BaseEntity {
     private String name;
 
     private String nickname;
+
+    private boolean isDeleted;
 }

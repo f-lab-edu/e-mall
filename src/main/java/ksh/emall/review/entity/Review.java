@@ -16,8 +16,8 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@SQLDelete(sql = "update order set is_deleted = true where id = ?")
-@Where(clause = "isDeleted = 0")
+@SQLDelete(sql = "update review set is_deleted = true where id = ?")
+@Where(clause = "is_deleted = false")
 public class Review extends BaseEntity {
 
     @Id
