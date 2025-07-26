@@ -1,9 +1,8 @@
 package ksh.emall.review.dto.request;
 
 import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import ksh.emall.review.enums.sort.ReviewSortCriteria;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Range;
@@ -14,10 +13,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ReviewRequestDto {
 
-    @NotNull(message = "페이지 크기는 필수입니다.")
-    @Positive(message = "페이지 크기는 양수입니다.")
-    @Max(value = 15, message = "페이지 크기는 최대 15개 입니다.")
-    private Integer size;
+    @NotNull(message = "정렬 기준은 필수입니다.")
+    private ReviewSortCriteria criteria;
 
     @NotNull(message = "정렬 방향은 필수입니다.")
     private Boolean isAscending;

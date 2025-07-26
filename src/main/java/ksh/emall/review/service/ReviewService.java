@@ -1,5 +1,7 @@
 package ksh.emall.review.service;
 
+import ksh.emall.common.exception.CustomException;
+import ksh.emall.common.exception.ErrorCode;
 import ksh.emall.product.entity.ProductReviewStat;
 import ksh.emall.product.repository.ProductRepository;
 import ksh.emall.product.repository.ProductReviewStatRepository;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,12 +43,25 @@ public class ReviewService {
     }
 
     @Transactional
-    public void register(long productId, ReviewRegisterRequestDto request) {
+    public Review register(long productId, ReviewRegisterRequestDto request) {
         productRepository.getById(productId);
+
+        boolean duplicated = reviewRepository.existsByProductIdAndMemberId(
+            productId,
+            request.getMemberId()
+        );
+        if (duplicated) {
+            throw new CustomException(ErrorCode.REVIEW_ALREADY_REGISTERED);
+        }
+
+
         Review review = createReview(productId, request);
         reviewRepository.save(review);
+
         ProductReviewStat productReviewStat = productReviewStatRepository.getByProductId(productId);
         productReviewStat.addReviewScore(request.getScore());
+
+        return review;
     }
 
     private Review createReview(

@@ -9,6 +9,7 @@ import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import ksh.emall.review.dto.request.ReviewRequestDto;
+import ksh.emall.review.enums.sort.ReviewSortCriteria;
 import ksh.emall.review.repository.projection.ReviewWithMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,7 +25,7 @@ import static ksh.emall.review.entity.QReview.review;
 @RequiredArgsConstructor
 public class ReviewQueryRepositoryImpl implements ReviewQueryRepository {
 
-    private JPAQueryFactory queryFactory;
+    private final JPAQueryFactory queryFactory;
 
 
     @Override
@@ -51,6 +52,7 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository {
                 cursorOrder(request),
                 review.id.asc()
             )
+            .limit(pageable.getPageSize())
             .fetch();
 
 
@@ -103,9 +105,11 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository {
     private BooleanExpression registerDateCursorPredicate(
         DatePath<LocalDate> path,
         LocalDate lastValue,
-        long lastId,
+        Long lastId,
         boolean isAscending
     ) {
+        if(lastId == null) return null;
+
         BooleanExpression sameValuePredicate = path.eq(lastValue)
             .and(review.id.gt(lastId));
 
@@ -121,9 +125,9 @@ public class ReviewQueryRepositoryImpl implements ReviewQueryRepository {
     ) {
         Order direction = request.getIsAscending() ? Order.ASC : Order.DESC;
 
-        return request.getLastScore() == null
-            ? new OrderSpecifier<>(direction, review.createdAt)
-            : new OrderSpecifier<>(direction, review.score);
+        return request.getCriteria() == ReviewSortCriteria.SCORE
+            ? new OrderSpecifier<>(direction, review.score)
+            : new OrderSpecifier<>(direction, review.registerDate);
     }
 
     private Long totalCount(Predicate where) {

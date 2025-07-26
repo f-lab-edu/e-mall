@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Builder
@@ -40,4 +42,8 @@ public class Product extends BaseEntity {
     private String imageUrl;
 
     private boolean isDeleted;
+
+    public LocalDate getGuaranteedDeliveryDate() {
+        return LocalDate.now().plusDays(this.expectedDeliveryDays);
+    }
 }

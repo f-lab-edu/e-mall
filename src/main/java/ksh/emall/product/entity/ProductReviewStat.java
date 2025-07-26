@@ -25,7 +25,9 @@ public class ProductReviewStat extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double averageReviewScore;
+    private Double avgScore;
+
+    private Integer totalScore;
 
     private Integer reviewCount;
 
@@ -36,11 +38,13 @@ public class ProductReviewStat extends BaseEntity {
     public void addReviewScore(int newScore) {
         if(reviewCount == 0){
             this.reviewCount = 0;
-            this.averageReviewScore = 0.0;
+            this.totalScore = 0;
+            this.avgScore = 0.0;
         }
 
-        double totalScore = this.averageReviewScore * this.reviewCount;
+        this.totalScore += newScore;
         this.reviewCount++;
-        this.averageReviewScore = (totalScore + newScore) / this.reviewCount;
+
+        this.avgScore = (double) totalScore / reviewCount;
     }
 }

@@ -131,7 +131,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
     private BooleanExpression reviewScorePredicate(Integer score) {
         if (score == null) return null;
 
-        var avgScore = productReviewStat.averageReviewScore;
+        var avgScore = productReviewStat.avgScore;
 
         var lower = avgScore.goe(score);
         var upper = score < 4 ? avgScore.lt(score + 1) : avgScore.loe(score + 1);

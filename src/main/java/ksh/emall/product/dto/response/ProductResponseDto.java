@@ -29,8 +29,8 @@ public class ProductResponseDto {
             .name(product.getName())
             .price(product.getPrice())
             .deliveryType(product.getDeliveryType())
-            .guaranteedDeliveryDate(LocalDate.now().plusDays(product.getExpectedDeliveryDays()))
-            .averageScore(reviewStat.getAverageReviewScore())
+            .guaranteedDeliveryDate(product.getGuaranteedDeliveryDate())
+            .averageScore(reviewStat.getAvgScore())
             .reviewCount(reviewStat.getReviewCount())
             .imageUrl(product.getImageUrl())
             .build();
