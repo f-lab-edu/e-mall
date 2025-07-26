@@ -51,6 +51,7 @@ class ReviewControllerTest {
                     .param("lastId", "1")
                     .param("productId", "1")
                     .param("lastScore", "3")
+                    .param("criteria", "SCORE")
             )
             .andDo(print())
             .andExpect(status().isOk());
@@ -68,7 +69,8 @@ class ReviewControllerTest {
             .param("size", "1")
             .param("isAscending", "true")
             .param("lastId", "1")
-            .param("productId", "1");
+            .param("productId", "1")
+            .param("criteria", "SCORE");
 
         if (lastScore != null) {
             builder.param("lastScore", lastScore);
